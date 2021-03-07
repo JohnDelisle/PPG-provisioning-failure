@@ -1,15 +1,23 @@
-
 provider "azurerm" {
   features {}
-  subscription_id = "1e2b027a-24d8-48ba-80da-9412719e1201"
+  subscription_id = "YOUR SUB ID"
+}
+
+locals {
+  rg_name  = "YOUR RESOURCE GROUP NAME FOR THESE TEST RESOURCES"
+  location = "AZURE REGION LIKE EASTUS2"
 }
 
 
+// this defines what we call a "pod", an N-tier applicaiton with web, app, and SQL tiers.
+// you may want to adjust the quanitity and size of VMs, or the number of data disks
+// this is just an example to trigger the PPG/ mixed VM series issues, and doesn't actually provision licensed SQL VMs
 locals {
   tiers = {
     web = {
       name    = "web"
       vm_size = "Standard_B2MS"
+      // VMs will be created for each suffix below
       vm_suffixes = [
         "01",
         "02",
@@ -23,6 +31,7 @@ locals {
         "10",
       ]
       data_disk_size = "64"
+      // Data disks will be created per-VM for each suffix below
       data_disk_suffixes = [
         "01",
         "02",
@@ -89,8 +98,8 @@ locals {
 
 // RG
 resource "azurerm_resource_group" "pod" {
-  name     = "jmd-test-new"
-  location = "EastUS2"
+  name     = local.rg_name
+  location = local.location
 }
 
 // VNet
