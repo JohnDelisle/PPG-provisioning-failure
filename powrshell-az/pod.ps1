@@ -7,6 +7,10 @@ param (
 
 $ErrorActionPreference = "Inquire"
 
+# Note that because this script use -AsJob on New-AzVm, the script may appear to run successfully.
+# However, upon script completion, check the Azure portal and you will see the VMs have failed to provision due to capacity errors.
+# Also visible via Get-Job to observe the failed backgrounded jobs.
+
 
 $vmAdminUsername = "adminuser"
 $vmAdminPassword = ConvertTo-SecureString 'P@$$w0rd1234!' -AsPlainText -Force
